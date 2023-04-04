@@ -5,37 +5,40 @@ const createScene = function() {//in this function put everything thet is in the
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3.Black;
 
-    const alpha =  Math.PI/4;
-    const beta = Math.PI/3;
-    const radius = 8;
+    const alpha = -Math.PI/2;//Math.PI/4;
+    const beta = Math.PI/2;
+    const radius = 1;
     const target = new BABYLON.Vector3(0, 0, 0);
 
     const boxMaterial = new BABYLON.StandardMaterial("material", scene);
     boxMaterial.diffuseColor = BABYLON.Color3.Random();
 
-    const box = BABYLON.MeshBuilder.CreateBox("box", {size:0.5});
-    box.position.x = 0.5;
-    box.position.y = 0.5;
-    box.material = boxMaterial; //add color to the box
+    const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
+    sphere.position.x = 0;
+    sphere.position.y = 1.5;
+    sphere.material = boxMaterial; //add color to the box
 
-    box.actionManager = new BABYLON.ActionManager(scene);
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-        BABYLON.ActionManager.OnPickTrigger,
-        function (evt){//function colled when clicked on the cube
-            const sourceBox = evt.meshUnderPointer;
-                
-            //move the box upright
-            sourceBox.position.x += 0.1;
-            sourceBox.position.y += 0.1;
-                    
-            //update the color
-            boxMaterial.diffuseColor = BABYLON.Color3.Random();
-    }));
+    //create bounding box and object controls
+    const boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(sphere);
+    var utilLayer = new BABYLON.UtilityLayerRenderer(scene)
+    utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+    const gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#0984e3"), utilLayer)
+    gizmo.rotationSphereSize = 0.03;
+    gizmo.scaleBoxSize = 0.03;
+    gizmo.attachedMesh = boundingBox;
+    //gizmo.PreserveScaling = true;
+   
+    // Create behaviors to drag and scale with pointers in VR
+    var sixDofDragBehavior = new BABYLON.SixDofDragBehavior()
+    boundingBox.addBehavior(sixDofDragBehavior)
+    var multiPointerScaleBehavior = new BABYLON.MultiPointerScaleBehavior()
+    boundingBox.addBehavior(multiPointerScaleBehavior)
 
     const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);//camera that can be rotated around a target
     camera.attachControl(canvas, true);
 
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+    light.intensity = 1; //lowering the intensity of the light
 
     //MRTK element
     var manager = new BABYLON.GUI.GUI3DManager(scene)
@@ -66,9 +69,10 @@ const createScene = function() {//in this function put everything thet is in the
         nearMenu.rows = 3;
         manager.addControl(nearMenu);
         nearMenu.isPinned = true;
-        nearMenu.position.y = 1.61;
+        nearMenu.position.x = -0.2;
+        nearMenu.position.y = 1.5;
 
-        addNearMenuButtons(nearMenu, box, buttonParams);
+        addNearMenu(nearMenu, sphere, buttonParams);
 
         console.log("Done, WebXR is enabled.");
         return scene;
@@ -79,7 +83,7 @@ const addNearMenu = function (menu, target, buttonParams) {
     buttonParams.forEach(button => {
         input = new BABYLON.GUI.TouchHolographicButton();
         input.text = button.name;
-        inut.onPointerDownObservable.add(() => { target.material.diffuseColor = button.color });
+        input.onPointerDownObservable.add(() => { target.material.diffuseColor = button.color });
         menu.addButton(input);
     })
 }
