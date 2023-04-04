@@ -1,13 +1,13 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
-const createScene = function() {//in this function put everything thet is in the scene
+const createScene = function () {//in this function put everything thet is in the scene
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3.Black;
 
-    const alpha = -Math.PI/2;//Math.PI/4;
-    const beta = Math.PI/2;
-    const radius = 1;
+    const alpha = -Math.PI / 2;//Math.PI/4;
+    const beta = Math.PI / 2;
+    const radius = 2;
     const target = new BABYLON.Vector3(0, 0, 0);
 
     const boxMaterial = new BABYLON.StandardMaterial("material", scene);
@@ -15,7 +15,8 @@ const createScene = function() {//in this function put everything thet is in the
 
     const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
     sphere.position.x = 0;
-    sphere.position.y = 1.5;
+    sphere.position.y = 1.3;
+    sphere.position.z = 1;
     sphere.material = boxMaterial; //add color to the box
 
     //create bounding box and object controls
@@ -27,7 +28,7 @@ const createScene = function() {//in this function put everything thet is in the
     gizmo.scaleBoxSize = 0.03;
     gizmo.attachedMesh = boundingBox;
     //gizmo.PreserveScaling = true;
-   
+
     // Create behaviors to drag and scale with pointers in VR
     var sixDofDragBehavior = new BABYLON.SixDofDragBehavior()
     boundingBox.addBehavior(sixDofDragBehavior)
@@ -53,7 +54,11 @@ const createScene = function() {//in this function put everything thet is in the
     ]
 
     //To add a WebXR support, we need to call createDefaultXRExperienceAsync, has a promise result
-    const xrPromise = scene.createDefaultXRExperienceAsync();
+    const xrPromise = scene.createDefaultXRExperienceAsync({
+        uiOptions: {
+            sessionMode: 'immersive-ar'
+        }
+    });
 
     return xrPromise.then((xrExperience) => {
         try {
@@ -70,13 +75,14 @@ const createScene = function() {//in this function put everything thet is in the
         manager.addControl(nearMenu);
         nearMenu.isPinned = true;
         nearMenu.position.x = -0.2;
-        nearMenu.position.y = 1.5;
+        nearMenu.position.y = 1.3;
+        nearMenu.position.z = 1;
 
         addNearMenu(nearMenu, sphere, buttonParams);
 
         console.log("Done, WebXR is enabled.");
         return scene;
-    });       
+    });
 };
 
 const addNearMenu = function (menu, target, buttonParams) {
