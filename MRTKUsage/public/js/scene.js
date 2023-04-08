@@ -74,7 +74,7 @@ const createScene = async function () {//in this function put everything thet is
     manager.addControl(touchHoloButton);
     touchHoloButton.position = new BABYLON.Vector3(-0.3, 1.3, 1);
     touchHoloButton.text = "Add hologram";
-    touchHoloButton.imageUrl = "https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconStar.png";
+    touchHoloButton.imageUrl = "https://github.com/microsoft/MixedRealityToolkit-Unity/blob/main/Assets/MRTK/StandardAssets/Icons/shapes_icon.png";
     
     console.log(touchHoloButton.position);
 
