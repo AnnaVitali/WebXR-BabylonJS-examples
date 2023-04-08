@@ -1,7 +1,7 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
-const createScene = function () {//in this function put everything thet is in the scene
+const createScene = async function () {//in this function put everything thet is in the scene
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3.Black;
 
@@ -54,35 +54,46 @@ const createScene = function () {//in this function put everything thet is in th
     ]
 
     //To add a WebXR support, we need to call createDefaultXRExperienceAsync, has a promise result
-    const xrPromise = scene.createDefaultXRExperienceAsync({
-        uiOptions: {
-            sessionMode: 'immersive-ar'
-        }
-    });
+    const supported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar')
 
-    return xrPromise.then((xrExperience) => {
-        try {
-            xrExperience.baseExperience.featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
-        } catch (err) {
-            console.log("Articulated hand tracking not supported in this browser.");
-        }
+    if (supported) {
+        const xrHelper = await scene.createDefaultXRExperienceAsync({
+            uiOptions: {
+                sessionMode: 'immersive-ar',
+                referenceSpaceType: "local-floor"
+            }
+        });
+    } else {
+        const xrHelper =  await scene.createDefaultXRExperienceAsync({
+            uiOptions: {
+                sessionMode: 'immersive-vr',
+            }
+        });
+    }
 
-        manager.useRealisticScaling = true;
+   
+    try {
+        xrHelper.baseExperience.featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
+    } catch (err) {
+        console.log("Articulated hand tracking not supported in this browser.");
+    }
 
-        // Create Near Menu with Touch Holographic Buttons + behaviour
-        var nearMenu = new BABYLON.GUI.NearMenu("NearMenu");
-        nearMenu.rows = 3;
-        manager.addControl(nearMenu);
-        nearMenu.isPinned = true;
-        nearMenu.position.x = -0.2;
-        nearMenu.position.y = 1.3;
-        nearMenu.position.z = 1;
+    manager.useRealisticScaling = true;
 
-        addNearMenu(nearMenu, sphere, buttonParams);
+    // Create Near Menu with Touch Holographic Buttons + behaviour
+    var nearMenu = new BABYLON.GUI.NearMenu("NearMenu");
+    nearMenu.rows = 3;
+    manager.addControl(nearMenu);
+    nearMenu.isPinned = true;
+    nearMenu.position.x = -0.2;
+    nearMenu.position.y = 1.3;
+    nearMenu.position.z = 1;
 
-        console.log("Done, WebXR is enabled.");
-        return scene;
-    });
+    addNearMenu(nearMenu, sphere, buttonParams);
+
+    console.log("Done, WebXR is enabled.");
+    return scene;
+   
 };
 
 const addNearMenu = function (menu, target, buttonParams) {
