@@ -10,30 +10,8 @@ const createScene = async function () {//in this function put everything thet is
     const radius = 2;
     const target = new BABYLON.Vector3(0, 0, 0);
 
-    const boxMaterial = new BABYLON.StandardMaterial("material", scene);
-    boxMaterial.diffuseColor = BABYLON.Color3.Random();
-
-    const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
-    sphere.position.x = 0;
-    sphere.position.y = 1.3;
-    sphere.position.z = 1;
-    sphere.material = boxMaterial; //add color to the box
-
-    //create bounding box and object controls
-    const boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(sphere);
-    var utilLayer = new BABYLON.UtilityLayerRenderer(scene)
-    utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
-    const gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#0984e3"), utilLayer)
-    gizmo.rotationSphereSize = 0.03;
-    gizmo.scaleBoxSize = 0.03;
-    gizmo.attachedMesh = boundingBox;
-    //gizmo.PreserveScaling = true;
-
-    // Create behaviors to drag and scale with pointers in VR
-    var sixDofDragBehavior = new BABYLON.SixDofDragBehavior()
-    boundingBox.addBehavior(sixDofDragBehavior)
-    var multiPointerScaleBehavior = new BABYLON.MultiPointerScaleBehavior()
-    boundingBox.addBehavior(multiPointerScaleBehavior)
+    const sphere = createNewHologram(scene);
+    var hologramList = [sphere];
 
     const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);//camera that can be rotated around a target
     camera.attachControl(canvas, true);
@@ -57,6 +35,7 @@ const createScene = async function () {//in this function put everything thet is
     const supported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar')
 
     if (supported) {
+        console.log("IMMERSIVE AR SUPPORTED");
         const xrHelper = await scene.createDefaultXRExperienceAsync({
             uiOptions: {
                 sessionMode: 'immersive-ar',
@@ -64,13 +43,13 @@ const createScene = async function () {//in this function put everything thet is
             }
         });
     } else {
+        console.log("IMMERSIVE VR SUPPORTED")
         const xrHelper =  await scene.createDefaultXRExperienceAsync({
             uiOptions: {
                 sessionMode: 'immersive-vr',
             }
         });
     }
-
    
     try {
         xrHelper.baseExperience.featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
@@ -89,18 +68,64 @@ const createScene = async function () {//in this function put everything thet is
     nearMenu.position.y = 1.3;
     nearMenu.position.z = 1;
 
-    addNearMenu(nearMenu, sphere, buttonParams);
+    addNearMenu(nearMenu, hologramList, buttonParams);
+
+    var touchHoloButton = new BABYLON.GUI.TouchHolographicButton("TouchHoloButton");
+    manager.addControl(touchHoloButton);
+    touchHoloButton.position = new BABYLON.Vector3(-0.3, 1.3, 1);
+    touchHoloButton.text = "Add hologram";
+    touchHoloButton.imageUrl = "https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/main/Assets/MRTK/SDK/StandardAssets/Textures/IconStar.png";
+    
+    console.log(touchHoloButton.position);
+
+    touchHoloButton.onPointerDownObservable.add(() => {
+        const hologram = createNewHologram(scene);
+        hologramList.push(hologram);
+    });
 
     console.log("Done, WebXR is enabled.");
     return scene;
    
 };
 
-const addNearMenu = function (menu, target, buttonParams) {
+const createNewHologram = function (scene) {
+    const boxMaterial = new BABYLON.StandardMaterial("material", scene);
+    boxMaterial.diffuseColor = BABYLON.Color3.Random();
+
+    const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
+    sphere.position.x = 0;
+    sphere.position.y = 1.3;
+    sphere.position.z = 1;
+    sphere.material = boxMaterial; //add color to the box
+
+    //create bounding box and object controls
+    const boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(sphere);
+    var utilLayer = new BABYLON.UtilityLayerRenderer(scene)
+    utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+    const gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#0984e3"), utilLayer)
+    gizmo.rotationSphereSize = 0.03;
+    gizmo.scaleBoxSize = 0.03;
+    gizmo.attachedMesh = boundingBox;
+
+    // Create behaviors to drag and scale with pointers in VR
+    var sixDofDragBehavior = new BABYLON.SixDofDragBehavior()
+    boundingBox.addBehavior(sixDofDragBehavior)
+    var multiPointerScaleBehavior = new BABYLON.MultiPointerScaleBehavior()
+    boundingBox.addBehavior(multiPointerScaleBehavior)
+
+    return sphere;
+}
+
+const addNearMenu = function (menu, targets, buttonParams) {
+    console.log(targets);
     buttonParams.forEach(button => {
         input = new BABYLON.GUI.TouchHolographicButton();
         input.text = button.name;
-        input.onPointerDownObservable.add(() => { target.material.diffuseColor = button.color });
+        input.onPointerDownObservable.add(() => {
+            targets.forEach(target => {
+                target.material.diffuseColor = button.color
+            });
+        });
         menu.addButton(input);
     })
 }
