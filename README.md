@@ -1,6 +1,6 @@
 # WebXR-BabylonJS-examples
 
-This repository contains some examples of extended reality applications made using WebXR and BABYLON.js
+This repository contains some examples of eXtended Reality applications made using WebXR and BABYLON.js
 
 ## MRTK Usage example
 
@@ -14,7 +14,7 @@ This example refers to the piano tutorial available in the Microsoft documentati
 
 Further information can be found at the following link: [MRT tutorial](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/javascript/tutorials/babylonjs-webxr-piano/introduction-01)
 
-## SimpleCì Cube Interaction example
+## SimpleCÃ¬ Cube Interaction example
 
 This example refers to the tutorial available in the Microsoft documentation concerning the usage of WebXR.
 
