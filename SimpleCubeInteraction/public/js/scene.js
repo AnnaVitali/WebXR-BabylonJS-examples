@@ -1,6 +1,9 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
+/**
+ * Function to create the WebXR scene.
+ * */
 const createScene = function() {//in this function put everything thet is in the scene
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3.Black;

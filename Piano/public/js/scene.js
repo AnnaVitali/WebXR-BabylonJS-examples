@@ -1,7 +1,9 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
-
+/**
+ * Function to create the WebXR scene.
+ * */
 const createScene = async function(engine){// async in order to use the await keyword inside it
 	const scale = 0.015;
 	const scene = new BABYLON.Scene(engine);

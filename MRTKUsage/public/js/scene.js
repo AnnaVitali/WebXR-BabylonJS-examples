@@ -1,6 +1,9 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
+/**
+ * Function to create the WebXR scene.
+ * */
 const createScene = async function () {//in this function put everything thet is in the scene
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3.Black;
@@ -88,6 +91,10 @@ const createScene = async function () {//in this function put everything thet is
    
 };
 
+/**
+ * Create a new hologram and ad it in the scene.
+ * @param {BABYLON.Scene} scene the scene where to add the hologram.
+ */
 const createNewHologram = function (scene) {
     const boxMaterial = new BABYLON.StandardMaterial("material", scene);
     boxMaterial.diffuseColor = BABYLON.Color3.Random();
@@ -116,6 +123,12 @@ const createNewHologram = function (scene) {
     return sphere;
 }
 
+/**
+ * Add and configure a near menu for the scene.
+ * @param {BABYLON.GUI.NearMenu} menu the menu to add.
+ * @param {BABYLON.Mesh} targets the hologram of reference.
+ * @param {any} buttonParams the characteristics of the button.
+ */
 const addNearMenu = function (menu, targets, buttonParams) {
     console.log(targets);
     buttonParams.forEach(button => {
