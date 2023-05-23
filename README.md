@@ -4,7 +4,7 @@ This repository contains some examples of eXtended Reality applications made usi
 
 ## MRTK Usage example
 
-This example show how the merk element can be used with Babylon.js for jenerating WebXR app.
+This example show how MRTK element can be used with Babylon.js for jenerating WebXR app.
 
 ![Alt Text](img/web_xr.gif)
 
@@ -14,7 +14,7 @@ This example refers to the piano tutorial available in the Microsoft documentati
 
 Further information can be found at the following link: [MRT tutorial](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/javascript/tutorials/babylonjs-webxr-piano/introduction-01)
 
-## SimpleCì Cube Interaction example
+## Simple Cube Interaction example
 
 This example refers to the tutorial available in the Microsoft documentation concerning the usage of WebXR.
 
