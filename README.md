@@ -12,13 +12,13 @@ This example show how MRTK element can be used with Babylon.js for jenerating We
 
 This example refers to the piano tutorial available in the Microsoft documentation concerning the usage of WebXR.
 
-Further information can be found at the following link: [MRT tutorial](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/javascript/tutorials/babylonjs-webxr-piano/introduction-01)
+Further information can be found at the following link: [MRTK tutorial](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/javascript/tutorials/babylonjs-webxr-piano/introduction-01)
 
 ## Simple Cube Interaction example
 
 This example refers to the tutorial available in the Microsoft documentation concerning the usage of WebXR.
 
-Further information can be found at the following link: [MRT tutorial](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/javascript/tutorials/babylonjs-webxr-helloworld/introduction-01)
+Further information can be found at the following link: [MRTK tutorial](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/javascript/tutorials/babylonjs-webxr-helloworld/introduction-01)
 
 ## How to run the examples
 
